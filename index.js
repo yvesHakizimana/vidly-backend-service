@@ -10,6 +10,8 @@ const genres = [
 
 app.use(express.json());
 
+const PORT = process.env.PORT || 4000;
+
 app.get('/api/genres', (req, res) => {
     if(genres.length > 0)
         return res.send(genres);
@@ -19,7 +21,7 @@ app.get('/api/genres', (req, res) => {
 app.post('/api/genres', (req, res) => {
     const {error } = validateGenre(req.body);
     if(error){
-        return res.status(404).send(error.details[0].message)
+        return res.status(400).send(error.details[0].message)
     }
     const newGenre = {
         id: genres.length + 1,
@@ -33,7 +35,7 @@ app.put('/api/genres/:id', (req, res) => {
     //Validate the body request of the genre
     const {error} = validateGenre(req.body);
     if(error){
-        return res.status(404).send(error.details[0].message)
+        return res.status(400).send(error.details[0].message)
     }
     //Lookup the genre by Id
     const foundGenre = findGenreById(req.params.id);
@@ -68,3 +70,6 @@ function validateGenre(genre) {
 function findGenreById(genreId){
     return genres.find(genre => genre.id === parseInt(genreId))
 }
+
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
