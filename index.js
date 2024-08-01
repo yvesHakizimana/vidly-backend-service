@@ -18,6 +18,13 @@ app.get('/api/genres', (req, res) => {
     res.send("No genres present now");
 })
 
+app.get('/api/genres/:id', (req, res) => {
+    const foundGenre =  findGenreById(req.params.id);
+    if(!foundGenre)
+        return res.status(404).send("No such genre found");
+    res.send(foundGenre);
+})
+
 app.post('/api/genres', (req, res) => {
     const {error } = validateGenre(req.body);
     if(error){
