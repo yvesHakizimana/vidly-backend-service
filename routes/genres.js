@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { Genre, validate } = require('../models/genre');
 
-
-
 router.get('/', async (req, res) => {
     const genres = await Genre
         .find()
@@ -57,7 +55,5 @@ router.delete('/:id', async (req, res) => {
         return res.status(404).send("No such genre with id " + req.params.id);
     return res.send(foundGenre)
 })
-
-
 
 module.exports = router
