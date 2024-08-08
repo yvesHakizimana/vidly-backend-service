@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+const config = require('config')
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const genres = require('./routes/genres')
@@ -12,11 +13,17 @@ const auth  = require('./routes/auth')
 
 app.use(express.json());
 
+//Checking if the jwt private key is defined.
+if(!config.get('jwtPrivateKey')){
+    console.error("Jwt private key is not defined")
+    process.exit(1)
+}
+
 mongoose.connect('mongodb://localhost/vidly-backend')
     .then(() => console.log("Connected to mongoDb"))
     .catch(err => console.error("Could not connect to mongoDb", err));
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 
 app.use('/api/genres', genres);
 app.use('/api/customers', customers);
