@@ -4,8 +4,6 @@ const { Customer } = require('../models/customer');
 const { Movie } = require('../models/movie');
 const { Rental, validate } = require('../models/rental');
 
-
-
 router.get('/', async (req, res) => {
     const rentals = await Rental.find().sort('-dateOut')
     if(!rentals)
