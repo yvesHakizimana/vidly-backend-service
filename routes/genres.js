@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Genre, validate } = require('../models/genre');
+const auth = require('../middleware/auth');
 
 router.get('/', async (req, res) => {
     const genres = await Genre
@@ -12,14 +13,14 @@ router.get('/', async (req, res) => {
     res.status(200).send("No records found")
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id',  async (req, res) => {
     const foundGenre =  await Genre.findById(req.params.id);
     if(!foundGenre)
         return res.status(404).send("No such genre found");
     res.send(foundGenre);
 })
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const {error } = validate(req.body);
     if(error){
         return res.status(400).send(error.details[0].message)
@@ -36,7 +37,7 @@ router.post('/', async (req, res) => {
     return res.send(newGenre);
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id',auth,  async (req, res) => {
     //Validate the body request of the genre
     const {error} = validate(req.body);
     if(error){
@@ -49,7 +50,7 @@ router.put('/:id', async (req, res) => {
     res.send(foundGenre);
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth,  async (req, res) => {
     const foundGenre = await Genre.findByIdAndDelete(req.params.id)
     if(!foundGenre)
         return res.status(404).send("No such genre with id " + req.params.id);

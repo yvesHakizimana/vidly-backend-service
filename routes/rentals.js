@@ -3,6 +3,7 @@ const router = express.Router();
 const { Customer } = require('../models/customer');
 const { Movie } = require('../models/movie');
 const { Rental, validate } = require('../models/rental');
+const auth = require('../middleware/auth');
 
 router.get('/', async (req, res) => {
     const rentals = await Rental.find().sort('-dateOut')
@@ -18,7 +19,7 @@ router.get('/:id', async (req, res) => {
     res.send(rental)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     //Validate the body request to avoid malicious sites or other things like that
     const {error} = validate(req.body);
     if(error)
