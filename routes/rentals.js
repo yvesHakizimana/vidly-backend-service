@@ -47,19 +47,21 @@ router.post('/', async (req, res) => {
 
     session.startTransaction();
 
+    const newRental = new Rental({
+        customer: {
+            _id: foundCustomer._id,
+            name: foundCustomer.name,
+            phone:  foundCustomer.phone
+        },
+        movie: {
+            _id: foundMovie._id,
+            title: foundMovie.title,
+            dailyRentalRate: foundMovie.dailyRentalRate,
+        }
+    })
+
     try {
-        const newRental = new Rental({
-            customer: {
-                _id: foundCustomer._id,
-                name: foundCustomer.name,
-                phone:  foundCustomer.phone
-            },
-            movie: {
-                _id: foundMovie._id,
-                title: foundMovie.title,
-                dailyRentalRate: foundMovie.dailyRentalRate,
-            }
-        })
+
         await newRental.save({session})
 
         foundMovie.numberInStock--;
@@ -69,10 +71,11 @@ router.post('/', async (req, res) => {
         await session.abortTransaction();
         res.status(500).send("Something failed in the middle")
     } finally {
-        session.endSession();
+        await session.endSession();
         res.send(newRental)
     }
 
 })
+
 
 module.exports = router
