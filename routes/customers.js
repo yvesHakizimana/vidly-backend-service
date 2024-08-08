@@ -37,8 +37,11 @@ router.post('/', auth,  async (req, res) => {
         newCustomer = await newCustomer.save()
         res.status(200).send(newCustomer);
     } catch (err){
-        for(let field in err.errors)
-            return res.status(400).send(err.errors[field]);
+        if(err.errors){
+            const errorMessages = Object.values(err.errors).map(e => e.message);
+            return res.status(400).send(errorMessages);
+        }
+        return res.status(500).send('An unexpected error occurred.');
     }
 
 })
