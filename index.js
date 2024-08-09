@@ -1,3 +1,4 @@
+require('express-async-errors')
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
@@ -10,8 +11,20 @@ const movies = require('./routes/movies')
 const rentals = require('./routes/rentals')
 const users = require('./routes/users')
 const auth  = require('./routes/auth')
+const error = require('./middleware/error')
+const winston = require('./utils/logger');
+
+
+process.on('uncaughtException', ex => {
+    console.log("WE GOT UNCAUGHT EXCEPTION")
+    winston.error(ex.message, ex);
+})
+
+
 
 app.use(express.json());
+
+throw new Error("Something failed in the startup")
 
 //Checking if the jwt private key is defined.
 if(!config.get('jwtPrivateKey')){
@@ -31,6 +44,9 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals)
 app.use('/api/users', users)
 app.use('/api/auth', auth)
+
+//Error Handling.
+app.use(error)
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 

@@ -4,13 +4,10 @@ const { Genre, validate } = require('../models/genre');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 
-router.get('/', async (req, res) => {
-    const genres = await Genre
-        .find()
-        .sort('name');
-    if(genres.length > 0) {
-        return res.status(200).json(genres);
-    }
+router.get('/', async (req, res, next) => {
+    throw new Error("Could not fetch genres.")
+    const genres = await Genre.find().sort('name');
+    if(genres.length > 0) return res.status(200).json(genres);
     res.status(200).send("No records found")
 })
 
