@@ -1,14 +1,15 @@
 require('express-async-errors')
 const express = require('express')
 const app = express()
-const mongoose = require('mongoose')
 const config = require('config')
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const winston = require('./utils/logger');
 const {modifiers: ex} = require("@hapi/joi/lib/types/any");
-require('./startup/routes')(app)
 
+
+require('./startup/routes')(app)
+require('./startup/db')()
 
 process.on('uncaughtException', ex => {
     winston.error(ex.message, ex);
@@ -25,10 +26,6 @@ if(!config.get('jwtPrivateKey')){
     console.error("Jwt private key is not defined")
     process.exit(1)
 }
-
-mongoose.connect('mongodb://localhost/vidly-backend')
-    .then(() => console.log("Connected to mongoDb"))
-    .catch(err => console.error("Could not connect to mongoDb", err));
 
 const PORT = process.env.PORT || 4000;
 
