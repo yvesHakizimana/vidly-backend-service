@@ -13,14 +13,19 @@ const users = require('./routes/users')
 const auth  = require('./routes/auth')
 const error = require('./middleware/error')
 const winston = require('./utils/logger');
+const {modifiers: ex} = require("@hapi/joi/lib/types/any");
 
 
 process.on('uncaughtException', ex => {
-    console.log("WE GOT UNCAUGHT EXCEPTION")
     winston.error(ex.message, ex);
+    process.exit(1)
 })
 
 
+process.on('unhandledRejection', err => {
+    winston.error(err.message, err);
+    process.exit(1)
+})
 
 app.use(express.json());
 
