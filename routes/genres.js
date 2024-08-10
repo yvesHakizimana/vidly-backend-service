@@ -35,7 +35,7 @@ router.post('/', auth, async (req, res) => {
     return res.send(newGenre);
 })
 
-router.put('/:id',auth,  async (req, res) => {
+router.put('/:id', [auth, validateObjectId], async (req, res) => {
     //Validate the body request of the genre
     const {error} = validate(req.body);
     if(error){
