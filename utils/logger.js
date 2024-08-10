@@ -1,5 +1,5 @@
 const winston = require('winston');
-require('winston-mongodb')
+// require('winston-mongodb')
 const mongoose = require("mongoose");
 
 let options = {
@@ -21,6 +21,6 @@ module.exports = winston.createLogger({
     transports: [
         new winston.transports.Console(),
         new winston.transports.File({filename: 'logs/error.log', level: 'error'}),
-        new winston.transports.MongoDB(options)
+        // new winston.transports.MongoDB(options)
     ]
 })

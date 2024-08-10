@@ -21,5 +21,6 @@ process.on('unhandledRejection', err => {
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => winston.info(`Listening on port ${PORT}`));
+const server = app.listen(PORT, () => winston.info(`Listening on port ${PORT}`));
 
+module.exports = server
