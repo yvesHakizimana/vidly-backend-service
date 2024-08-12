@@ -183,12 +183,42 @@ describe('/api/genres', () => {
 
     })
 
+    describe('DELETE /:id', () => {
+        let token;
+        let genre;
+        let genreId;
+
+        beforeEach(async () => {
+            token = new User().generateAuthToken();
+            genre = new Genre({name: 'genre1'})
+            await genre.save();
+            genreId = genre._id;
+        })
+
+        afterEach(async () => {
+            await Genre.deleteMany()
+        })
+
+        const exec = () => {
+            return  request(server)
+                .delete(`/api/genres/${genreId}`)
+                .set('x-auth-token', token)
+        }
+
+        it('should return 401 if user not logged in', async () => {
+            token = ''
+            const res = await exec()
+
+            expect(res.status).toBe(401)
+        });
+
+        it('should return 403 if the user is not admin',  async () => {
+            const res = await exec()
+
+            expect(res.status).toBe(403)
+        })
 
 
-
-
-
-
-
+    })
 
 })
