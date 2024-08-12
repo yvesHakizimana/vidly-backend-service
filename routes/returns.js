@@ -20,9 +20,8 @@ router.post('/', auth, async (req, res) => {
     //Setting the dateReturned
     rental.dateReturned = Date.now()
 
-    // Process the rental fee.
-    const rental_days = Math.floor((rental.dateReturned - rental.dateOut) / (1000 * 60 * 60 * 24))
-    rental.rentalFee = rental_days * rental.movie.dailyRentalRate;
+    // Process the rental fee and return.
+    rental.return()
 
     await rental.save()
 

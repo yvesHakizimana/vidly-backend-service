@@ -64,6 +64,12 @@ rentalSchema.statics.lookup = function(customerId, movieId){
     })
 }
 
+rentalSchema.methods.return = function(){
+    this.dateReturned = Date.now();
+    const rental_days = Math.floor((this.dateReturned - this.dateOut) / (1000 * 60 * 60 * 24))
+    this.rentalFee = rental_days * this.movie.dailyRentalRate;
+}
+
 const Rental = mongoose.model('Rental', rentalSchema);
 
 function validateRental(rental){
