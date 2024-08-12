@@ -5,9 +5,9 @@ const {modifiers: ex} = require("@hapi/joi/lib/types/any");
 
 require('express-async-errors')
 require('./startup/routes')(app)
+require('./startup/validation')()
 require('./startup/db')()
 require('./startup/config')()
-require('./startup/validation')()
 
 process.on('uncaughtException', ex => {
     winston.error(ex.message, ex);

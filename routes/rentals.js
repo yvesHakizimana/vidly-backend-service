@@ -66,12 +66,13 @@ router.post('/', auth, async (req, res) => {
         foundMovie.numberInStock--;
         await foundMovie.save({session})
         await session.commitTransaction()
+        res.status(200).send(newRental)
     } catch (err){
         await session.abortTransaction();
         res.status(500).send("Something failed in the middle")
     } finally {
         await session.endSession();
-        res.send(newRental)
+
     }
 
 })
