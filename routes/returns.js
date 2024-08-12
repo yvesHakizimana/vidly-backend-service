@@ -12,10 +12,7 @@ router.post('/', auth, async (req, res) => {
 
     const {customerId, movieId } = req.body
 
-    const rental = await Rental.findOne({
-        'customer._id': customerId,
-        'movie._id': movieId,
-    })
+    const rental = await Rental.lookup(customerId, movieId)
     if(!rental)  return res.status(404).send('Rental not found.')
 
     if(rental.dateReturned) return res.status(400).send('Return already processed.')
